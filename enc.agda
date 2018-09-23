@@ -1,5 +1,4 @@
-open import Data.Fin
-open import Data.List renaming ([] to ⟨⟩; _++_ to _⌢_)
+open import Data.Fin hiding (_+_)
 open import Data.Nat
 
-data enc : (M : ℕ) → {M>0 : M > 0} → List (Fin M) → Set where
+data List (M-1 : ℕ) : Fin (suc M-1) → Set where
