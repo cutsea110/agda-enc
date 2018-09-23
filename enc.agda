@@ -9,3 +9,6 @@ data List (`M : ℕ) (A : Fin (suc `M)) : Set where
 data Enc (`M : ℕ){A : Fin (suc `M)} : List `M A → Set where
   nil  : Enc `M ⟨⟩
   cons : (x : Fin (suc `M)) → (s : List `M A) → Enc `M (⟨ x ⟩⌢ s)
+
+enc : (`M : ℕ) {A : Fin (suc `M)} → List `M A → ℕ
+enc `M xs = {!!}
