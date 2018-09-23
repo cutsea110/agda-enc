@@ -11,13 +11,13 @@ data Enc (`M : ℕ){A : Fin (suc `M)} : List `M A → Set where
   nil  : Enc `M ⟨⟩
   cons : (x : Fin (suc `M)) → (s : List `M A) → Enc `M (⟨ x ⟩⌢ s)
 
+-- | {M=n} [a_0,a_1,a_2,...] ==> (1+a_0) + n(1+a_1) + n^2(1+a_2) + .. + n^i(1+a_i) + ...
 enc : (`M : ℕ) {A : Fin (suc `M)} → List `M A → ℕ
 enc `M ⟨⟩ = 0
 enc `M (⟨ x ⟩⌢ s) = 1 + toℕ x + suc `M * enc `M s
 
 dec : (`M : ℕ) {A : Fin (suc `M)} → ℕ → List `M A
-dec `M zero = ⟨⟩
-dec `M (suc n) = {!!}
+dec `M n = {!!}
 
 law1 : {`M : ℕ}{A : Fin (suc `M)}{s : List `M A} → dec `M (enc `M s) ≡ s
 law1 = {!!}
