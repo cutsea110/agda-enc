@@ -11,4 +11,5 @@ data Enc (`M : ℕ){A : Fin (suc `M)} : List `M A → Set where
   cons : (x : Fin (suc `M)) → (s : List `M A) → Enc `M (⟨ x ⟩⌢ s)
 
 enc : (`M : ℕ) {A : Fin (suc `M)} → List `M A → ℕ
-enc `M xs = {!!}
+enc `M ⟨⟩ = 0
+enc `M (⟨ x ⟩⌢ s) = 1 + toℕ x + suc `M * enc `M s
