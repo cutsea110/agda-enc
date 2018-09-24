@@ -2,6 +2,7 @@ open import Data.Fin hiding (_+_) renaming (zero to fzero; suc to fsuc)
 open import Data.Nat
 open import Data.Nat.DivMod
 open import Relation.Binary.PropositionalEquality as PropEq
+open import Relation.Nullary.Decidable
 
 data List (`M : ℕ) (A : Fin (suc `M)) : Set where
   ⟨⟩ : List `M A
@@ -22,6 +23,18 @@ dec `M n = {!!}
 
 test : List 3 (fromℕ 3)
 test = ⟨ fsuc fzero ⟩⌢ ⟨ fsuc (fsuc fzero) ⟩⌢ ⟨ fsuc (fsuc (fsuc fzero)) ⟩⌢ ⟨⟩
+
+foo : ℕ
+foo = (enc 3 test) div 4
+
+foo' : ℕ
+foo' = foo div 4
+
+bar : Fin (suc 3)
+bar = (enc 3 test) mod 4
+
+bar' : Fin (suc 3)
+bar' = foo' mod 4
 
 law1 : {`M : ℕ}{A : Fin (suc `M)}{s : List `M A} → dec `M (enc `M s) ≡ s
 law1 = {!!}
