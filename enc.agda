@@ -20,6 +20,9 @@ enc `M (⟨ x ⟩⌢ s) = 1 + toℕ x + suc `M * enc `M s
 dec : (`M : ℕ) {A : Fin (suc `M)} → ℕ → List `M A
 dec `M n = {!!}
 
+test : List 3 (fromℕ 3)
+test = ⟨ fsuc fzero ⟩⌢ ⟨ fsuc (fsuc fzero) ⟩⌢ ⟨ fsuc (fsuc (fsuc fzero)) ⟩⌢ ⟨⟩
+
 law1 : {`M : ℕ}{A : Fin (suc `M)}{s : List `M A} → dec `M (enc `M s) ≡ s
 law1 = {!!}
 
