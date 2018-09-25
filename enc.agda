@@ -2,6 +2,7 @@ open import Data.Fin hiding (_+_) renaming (zero to fzero; suc to fsuc)
 open import Data.Nat
 open import Data.Nat.DivMod
 open import Relation.Binary.PropositionalEquality as PropEq
+open import Relation.Nullary
 open import Relation.Nullary.Decidable
 
 data List (`M : ℕ) (A : Fin (suc `M)) : Set where
