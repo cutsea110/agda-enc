@@ -41,9 +41,9 @@ WF = ∀ n → Acc n
     -- NOTICE! : go is nicely structurally recursive.
     go : ∀ n m → m < n → Acc m
     go zero m ()
-    go (suc n) zero (s≤s z≤n) = acc (λ _ ())
-    go (suc n) (suc m) (s≤s m<n) = acc (λ o o<sm → go n o (trans o<sm m<n))
-
+    go (suc n) zero _ = acc (λ _ ())
+    go (suc n) (suc m) (s≤s m<n) = acc (λ m₁ m₁<sm → go n m₁ (trans m₁<sm m<n))
+    
 -- prove
 /2-less : ∀ n → ⌊ n /2⌋ ≤ n
 /2-less zero = z≤n
