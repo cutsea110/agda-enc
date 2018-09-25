@@ -1,7 +1,11 @@
-open import Data.Fin hiding (_+_) renaming (zero to fzero; suc to fsuc)
+open import Data.Fin hiding (_+_) renaming (zero to fzero; suc to fsuc; pred to fpred)
 open import Data.Nat
 open import Data.Nat.DivMod
+open import Data.Nat.Divisibility
+open import Data.Nat.GCD
+open import Data.Nat.Coprimality
 open import Relation.Binary.PropositionalEquality as PropEq
+open import Relation.Nullary
 open import Relation.Nullary.Decidable
 
 data List (`M : ℕ) (A : Fin (suc `M)) : Set where
@@ -19,7 +23,9 @@ enc `M ⟨⟩ = 0
 enc `M (⟨ x ⟩⌢ s) = 1 + toℕ x + suc `M * enc `M s
 
 dec : (`M : ℕ) {A : Fin (suc `M)} → ℕ → List `M A
-dec `M n = {!!}
+dec `M n with n div (suc `M) | n mod (suc `M)
+dec `M n | d | fzero = ⟨ fromℕ `M ⟩⌢ ⟨⟩
+dec `M n | d | fsuc m = {!!} -- dec `M d
 
 test : List 3 (fromℕ 3)
 test = ⟨ fsuc fzero ⟩⌢ ⟨ fsuc (fsuc fzero) ⟩⌢ ⟨ fsuc (fsuc (fsuc fzero)) ⟩⌢ ⟨⟩
