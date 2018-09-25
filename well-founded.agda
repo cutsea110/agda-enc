@@ -43,3 +43,23 @@ WF = ∀ n → Acc n
     go zero m ()
     go (suc n) zero _ = acc (λ _ ())
     go (suc n) (suc m) (s≤s m<n) = acc (λ o o<sm → go n o (trans o<sm m<n))
+
+
+-- prove
+/2-less : ∀ n → ⌊ n /2⌋ ≤ n
+/2-less zero = z≤n
+/2-less (suc zero) = z≤n
+/2-less (suc (suc n)) = s≤s (trans (/2-less n) (right n))
+  where
+    right : ∀ n → n ≤ suc n
+    right zero = z≤n
+    right (suc n) = s≤s (right n)
+
+f : ℕ → ℕ
+f n = go n (<-wf n)
+  where
+    go : ∀ n → Acc n → ℕ
+    go zero _ = 0
+    -- NOTICE! structurally recursive thanks to Acc :
+    --   the recursive calls happen on arguments with one acc constructor peeled off.
+    go (suc n) (acc a) = go ⌊ n /2⌋ (a ⌊ n /2⌋ (s≤s (/2-less n)))
