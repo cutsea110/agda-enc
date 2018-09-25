@@ -48,12 +48,16 @@ WF = ∀ n → Acc n
 /2-less : ∀ n → ⌊ n /2⌋ ≤ n
 /2-less zero = z≤n
 /2-less (suc zero) = z≤n
-/2-less (suc (suc n)) = s≤s (trans (/2-less n) (right n))
+/2-less (suc (suc n)) = s≤s (help n)
   where
-    right : ∀ n → n ≤ suc n
-    right zero = z≤n
-    right (suc n) = s≤s (right n)
-
+    help : ∀ n → ⌊ n /2⌋ ≤ suc n
+    help n with /2-less n
+    ... | q = trans q (n≤sn n)
+      where
+        n≤sn : ∀ n → n ≤ suc n
+        n≤sn zero = z≤n
+        n≤sn (suc n) = s≤s (n≤sn n)
+    
 f : ℕ → ℕ
 f n = go n (<-wf n)
   where
