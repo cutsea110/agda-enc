@@ -20,7 +20,9 @@ enc `M ⟨⟩ = 0
 enc `M (⟨ x ⟩⌢ s) = 1 + toℕ x + suc `M * enc `M s
 
 dec : (`M : ℕ) {A : Fin (suc `M)} → ℕ → List `M A
-dec `M n = {!!}
+dec `M zero = ⟨⟩
+dec `M (suc n) with n divMod (suc `M)
+dec `M (suc .(toℕ remainder + quotient * suc `M)) | result quotient remainder refl = ⟨ remainder ⟩⌢ dec `M quotient
 
 test : List 3 (fromℕ 3)
 test = ⟨ fsuc fzero ⟩⌢ ⟨ fsuc (fsuc fzero) ⟩⌢ ⟨ fsuc (fsuc (fsuc fzero)) ⟩⌢ ⟨⟩
