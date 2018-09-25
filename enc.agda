@@ -19,6 +19,7 @@ enc : (`M : ℕ) {A : Fin (suc `M)} → List `M A → ℕ
 enc `M ⟨⟩ = 0
 enc `M (⟨ x ⟩⌢ s) = 1 + toℕ x + suc `M * enc `M s
 
+{-# TERMINATING #-}
 dec : (`M : ℕ) {A : Fin (suc `M)} → ℕ → List `M A
 dec `M zero = ⟨⟩
 dec `M (suc n) with n divMod (suc `M)
