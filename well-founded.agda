@@ -1,4 +1,6 @@
 open import Data.Nat
+open import Relation.Binary
+open DecTotalOrder decTotalOrder using (trans)
 
 data Acc (n : ℕ) : Set where
   acc : (∀ m → m < n → Acc m) → Acc n
@@ -29,3 +31,15 @@ triv3 = acc help
     help .0 (s≤s z≤n) = triv0
     help .1 (s≤s (s≤s z≤n)) = triv1
     help .2 (s≤s (s≤s (s≤s z≤n))) = triv2
+
+WF : Set
+WF = ∀ n → Acc n
+
+<-wf : WF
+<-wf n = acc (go n)
+  where
+    -- NOTICE! : go is nicely structurally recursive.
+    go : ∀ n m → m < n → Acc m
+    go zero m ()
+    go (suc n) zero _ = acc (λ _ ())
+    go (suc n) (suc m) (s≤s m<n) = acc (λ o o<sm → go n o (trans o<sm m<n))
