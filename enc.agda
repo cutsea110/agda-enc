@@ -1,4 +1,4 @@
-open import Data.Fin hiding (_+_) renaming (zero to fzero; suc to fsuc; pred to fpred)
+open import Data.Fin hiding (_+_; _<_) renaming (zero to fzero; suc to fsuc; pred to fpred)
 open import Data.Nat
 open import Data.Nat.DivMod
 open import Relation.Binary.PropositionalEquality as PropEq
@@ -18,6 +18,10 @@ data Enc (`M : ℕ){A : Fin (suc `M)} : List `M A → Set where
 enc : (`M : ℕ) {A : Fin (suc `M)} → List `M A → ℕ
 enc `M ⟨⟩ = 0
 enc `M (⟨ x ⟩⌢ s) = 1 + toℕ x + suc `M * enc `M s
+
+quot<dividend : ∀ `M → ∀ n → n div (suc `M) ≤′ n
+quot<dividend d zero = ≤′-refl
+quot<dividend d (suc n) = {!!}
 
 dec : (`M : ℕ) {A : Fin (suc `M)} → ℕ → List `M A
 dec `M zero = ⟨⟩
