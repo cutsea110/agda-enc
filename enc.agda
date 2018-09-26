@@ -5,6 +5,8 @@ open import Relation.Binary.PropositionalEquality as PropEq
 open import Relation.Nullary
 open import Relation.Nullary.Decidable
 
+open import Agda.Builtin.Nat
+
 data List (`M : ℕ) (A : Fin (suc `M)) : Set where
   ⟨⟩ : List `M A
   ⟨_⟩⌢_ : Fin (suc `M) → List `M A → List `M A
@@ -19,11 +21,12 @@ enc : (`M : ℕ) {A : Fin (suc `M)} → List `M A → ℕ
 enc `M ⟨⟩ = 0
 enc `M (⟨ x ⟩⌢ s) = 1 + toℕ x + suc `M * enc `M s
 
+div-helper-lemma : ∀ `M n → div-helper 0 `M n `M ≤′ n
+div-helper-lemma `M zero = ≤′-refl
+div-helper-lemma `M (suc n) = {!!}
+
 quot<dividend : ∀ `M → ∀ n → n div (suc `M) ≤′ n
-quot<dividend `M zero = ≤′-refl
-quot<dividend `M (suc n) = {!!}
-
-
+quot<dividend `M n = div-helper-lemma `M n
 
 dec : (`M : ℕ) {A : Fin (suc `M)} → ℕ → List `M A
 dec `M zero = ⟨⟩
