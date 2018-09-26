@@ -20,8 +20,10 @@ enc `M ⟨⟩ = 0
 enc `M (⟨ x ⟩⌢ s) = 1 + toℕ x + suc `M * enc `M s
 
 quot<dividend : ∀ `M → ∀ n → n div (suc `M) ≤′ n
-quot<dividend d zero = ≤′-refl
-quot<dividend d (suc n) = {!!}
+quot<dividend `M zero = ≤′-refl
+quot<dividend `M (suc n) = {!!}
+
+
 
 dec : (`M : ℕ) {A : Fin (suc `M)} → ℕ → List `M A
 dec `M zero = ⟨⟩
