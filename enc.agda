@@ -1,9 +1,11 @@
 open import Data.Fin hiding (_+_; _<_) renaming (zero to fzero; suc to fsuc; pred to fpred)
 open import Data.Nat
 open import Data.Nat.DivMod
-open import Relation.Binary.PropositionalEquality as PropEq
+open import Relation.Binary.PropositionalEquality as PropEq hiding (trans)
 open import Relation.Nullary
 open import Relation.Nullary.Decidable
+open import Relation.Binary
+open DecTotalOrder decTotalOrder using (trans)
 
 open import Agda.Builtin.Nat
 
@@ -21,17 +23,21 @@ enc : (`M : ℕ) {A : Fin (suc `M)} → List `M A → ℕ
 enc `M ⟨⟩ = 0
 enc `M (⟨ x ⟩⌢ s) = 1 + toℕ x + suc `M * enc `M s
 
+nDiv1≡n : ∀ n → (suc n) div 1 ≡ suc n
+nDiv1≡n n = {!!}
+
 div-helper-lemma : ∀ `M n → div-helper 0 `M n `M ≤′ n
 div-helper-lemma `M zero = ≤′-refl
-div-helper-lemma `M (suc n) = {!!}
+div-helper-lemma zero (suc n) rewrite nDiv1≡n n = ≤′-refl
+div-helper-lemma (suc `M) (suc n) = {!!}
 
 quot<dividend : ∀ `M → ∀ n → n div (suc `M) ≤′ n
 quot<dividend `M n = div-helper-lemma `M n
 
 dec : (`M : ℕ) {A : Fin (suc `M)} → ℕ → List `M A
 dec `M zero = ⟨⟩
-dec `M (suc n) with n divMod (suc `M)
-dec `M (suc .(toℕ remainder + quotient * suc `M)) | result quotient remainder refl = ⟨ remainder ⟩⌢ dec `M quotient
+dec `M (suc n) with n div (suc `M) | n mod (suc `M)
+... | q | r = ⟨ r ⟩⌢ dec `M q
 
 test : List 3 (fromℕ 3)
 test = ⟨ fsuc fzero ⟩⌢ ⟨ fsuc (fsuc fzero) ⟩⌢ ⟨ fsuc (fsuc (fsuc fzero)) ⟩⌢ ⟨⟩
