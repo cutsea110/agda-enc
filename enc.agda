@@ -42,21 +42,6 @@ dec `M zero = ⟨⟩
 dec `M (suc n) with n div (suc `M) | n mod (suc `M)
 ... | q | r = ⟨ r ⟩⌢ dec `M q
 
-test : List 3 (fromℕ 3)
-test = ⟨ fsuc fzero ⟩⌢ ⟨ fsuc (fsuc fzero) ⟩⌢ ⟨ fsuc (fsuc (fsuc fzero)) ⟩⌢ ⟨⟩
-
-foo : ℕ
-foo = (enc 3 test) div 4
-
-foo' : ℕ
-foo' = foo div 4
-
-bar : Fin (suc 3)
-bar = (enc 3 test) mod 4
-
-bar' : Fin (suc 3)
-bar' = foo' mod 4
-
 law1 : {`M : ℕ}{A : Fin (suc `M)}{s : List `M A} → dec `M (enc `M s) ≡ s
 law1 = {!!}
 
