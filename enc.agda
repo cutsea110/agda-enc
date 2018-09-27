@@ -36,6 +36,7 @@ div-helper-lemma (suc `M) (suc n) = {!!}
 quot<dividend : ∀ `M → ∀ n → n div (suc `M) ≤′ n
 quot<dividend `M n = div-helper-lemma `M n
 
+{-# TERMINATING #-}
 dec : (`M : ℕ) {A : Fin (suc `M)} → ℕ → List `M A
 dec `M zero = ⟨⟩
 dec `M (suc n) with n div (suc `M) | n mod (suc `M)
