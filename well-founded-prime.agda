@@ -1,10 +1,7 @@
 open import Data.Nat
+open import Data.Nat.Properties using (s≤′s)
 open import Induction.WellFounded
 open import Induction.Nat
-
-s≤′s : ∀ {n m} → n ≤′ m → suc n ≤′ suc m
-s≤′s ≤′-refl = ≤′-refl
-s≤′s (≤′-step prf) = ≤′-step (s≤′s prf)
 
 proof : ∀ n → ⌊ n /2⌋ ≤′ n
 proof zero = ≤′-refl
