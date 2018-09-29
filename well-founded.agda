@@ -57,6 +57,13 @@ triv⌊4/2⌋ = acc help
     help zero (s≤s z≤n) = triv0
     help (suc .0) (s≤s (s≤s z≤n)) = triv1
     
+triv⌊5/2⌋ : Acc ⌊ 5 /2⌋
+triv⌊5/2⌋ = acc help
+  where
+    help : ∀ m → suc m ≤ 2 → Acc m
+    help zero (s≤s z≤n) = triv0
+    help (suc .0) (s≤s (s≤s z≤n)) = triv1
+    
 WF : Set
 WF = (n : ℕ) → Acc n
 
