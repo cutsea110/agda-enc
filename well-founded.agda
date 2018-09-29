@@ -65,12 +65,12 @@ triv⌊5/2⌋ = acc help
     help (suc .0) (s≤s (s≤s z≤n)) = triv⌊2/2⌋
 
 triv⌊n/2⌋ : ∀ n → Acc ⌊ n /2⌋
-triv⌊n/2⌋ zero = triv0
+triv⌊n/2⌋ zero = triv⌊1/2⌋
 triv⌊n/2⌋ (suc zero) = triv⌊1/2⌋
 triv⌊n/2⌋ (suc (suc n)) = acc (help n)
   where
     help : ∀ n m → suc m ≤ suc ⌊ n /2⌋ → Acc m
-    help n m prf = {!!}
+    help n m (s≤s prf) = {!!}
     
 WF : Set
 WF = (n : ℕ) → Acc n
