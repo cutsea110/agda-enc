@@ -6,9 +6,10 @@ open import Relation.Binary.PropositionalEquality as PropEq hiding (trans)
 open import Relation.Nullary
 open import Relation.Nullary.Decidable
 open import Relation.Binary
-open DecTotalOrder decTotalOrder using (trans)
+open import Induction.WellFounded
+open import Induction.Nat
 
-open import Agda.Builtin.Nat
+open import Agda.Builtin.Nat hiding (_<_)
 
 data List (`M : ℕ) (A : Fin (suc `M)) : Set where
   ⟨⟩ : List `M A
@@ -36,7 +37,6 @@ div-helper-lemma (suc `M) (suc n) = {!!}
 quot<dividend : ∀ `M → ∀ n → n div (suc `M) ≤′ n
 quot<dividend `M n = div-helper-lemma `M n
 
-{-# TERMINATING #-}
 dec : (`M : ℕ) {A : Fin (suc `M)} → ℕ → List `M A
 dec `M zero = ⟨⟩
 dec `M (suc n) with n div (suc `M) | n mod (suc `M)
