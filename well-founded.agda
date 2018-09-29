@@ -33,6 +33,30 @@ triv3 = acc help
     help .1 (s≤s (s≤s z≤n)) = triv1
     help .2 (s≤s (s≤s (s≤s z≤n))) = triv2
 
+triv⌊1/2⌋ : Acc ⌊ 1 /2⌋
+triv⌊1/2⌋ = acc λ m ()
+
+triv⌊2/2⌋ : Acc ⌊ 2 /2⌋
+triv⌊2/2⌋ = acc help
+  where
+    help : ∀ m → suc m ≤ 1 → Acc m
+    help zero (s≤s z≤n) = triv0
+    help (suc m) (s≤s ())
+
+triv⌊3/2⌋ : Acc ⌊ 3 /2⌋
+triv⌊3/2⌋ = acc help
+  where
+    help : ∀ m → suc m ≤ 1 → Acc m
+    help zero (s≤s z≤n) = triv0
+    help (suc m) (s≤s ())
+
+triv⌊4/2⌋ : Acc ⌊ 4 /2⌋
+triv⌊4/2⌋ = acc help
+  where
+    help : ∀ m → suc m ≤ 2 → Acc m
+    help zero (s≤s z≤n) = triv0
+    help (suc .0) (s≤s (s≤s z≤n)) = triv1
+    
 WF : Set
 WF = (n : ℕ) → Acc n
 
