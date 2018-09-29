@@ -64,13 +64,31 @@ triv⌊5/2⌋ = acc help
     help zero (s≤s z≤n) = triv⌊1/2⌋
     help (suc .0) (s≤s (s≤s z≤n)) = triv⌊2/2⌋
 
+data Parity : ℕ → Set where
+  even : (k : ℕ) → Parity (k * 2)
+  odd  : (k : ℕ) → Parity (k * 2 + 1)
+
+parity : (n : ℕ) → Parity n
+parity zero = even zero
+parity (suc zero) = odd zero
+parity (suc (suc n)) with parity n
+parity (suc (suc .(k * 2))) | even k = even (suc k)
+parity (suc (suc .(k * 2 + 1))) | odd k = odd (suc k)
+
+open import Relation.Binary.PropositionalEquality hiding (trans)
+
+⌊k*2/2⌋≡k : ∀ k → ⌊ k * 2 /2⌋ ≡ k
+⌊k*2/2⌋≡k zero = refl
+⌊k*2/2⌋≡k (suc k) = cong suc (⌊k*2/2⌋≡k k)
+
+⌊k*2+1/2⌋≡k : ∀ k → ⌊ k * 2 + 1 /2⌋ ≡ k
+⌊k*2+1/2⌋≡k zero = refl
+⌊k*2+1/2⌋≡k (suc k) = cong suc (⌊k*2+1/2⌋≡k k)
+
 triv⌊n/2⌋ : ∀ n → Acc ⌊ n /2⌋
-triv⌊n/2⌋ zero = triv⌊1/2⌋
-triv⌊n/2⌋ (suc zero) = triv⌊1/2⌋
-triv⌊n/2⌋ (suc (suc n)) = acc (help n)
-  where
-    help : ∀ n m → suc m ≤ suc ⌊ n /2⌋ → Acc m
-    help n m (s≤s prf) = {!!}
+triv⌊n/2⌋ n with parity n
+triv⌊n/2⌋ .(k * 2) | even k rewrite ⌊k*2/2⌋≡k k = acc {!!}
+triv⌊n/2⌋ .(k * 2 + 1) | odd k = {!!}
     
 WF : Set
 WF = (n : ℕ) → Acc n
