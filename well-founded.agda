@@ -40,29 +40,37 @@ triv⌊2/2⌋ : Acc ⌊ 2 /2⌋
 triv⌊2/2⌋ = acc help
   where
     help : ∀ m → suc m ≤ 1 → Acc m
-    help zero (s≤s z≤n) = triv0
+    help zero (s≤s z≤n) = triv⌊1/2⌋
     help (suc m) (s≤s ())
 
 triv⌊3/2⌋ : Acc ⌊ 3 /2⌋
 triv⌊3/2⌋ = acc help
   where
     help : ∀ m → suc m ≤ 1 → Acc m
-    help zero (s≤s z≤n) = triv0
+    help zero (s≤s z≤n) = triv⌊1/2⌋
     help (suc m) (s≤s ())
 
 triv⌊4/2⌋ : Acc ⌊ 4 /2⌋
 triv⌊4/2⌋ = acc help
   where
     help : ∀ m → suc m ≤ 2 → Acc m
-    help zero (s≤s z≤n) = triv0
-    help (suc .0) (s≤s (s≤s z≤n)) = triv1
+    help zero (s≤s z≤n) = triv⌊1/2⌋
+    help (suc .0) (s≤s (s≤s z≤n)) = triv⌊2/2⌋
     
 triv⌊5/2⌋ : Acc ⌊ 5 /2⌋
 triv⌊5/2⌋ = acc help
   where
     help : ∀ m → suc m ≤ 2 → Acc m
-    help zero (s≤s z≤n) = triv0
-    help (suc .0) (s≤s (s≤s z≤n)) = triv1
+    help zero (s≤s z≤n) = triv⌊1/2⌋
+    help (suc .0) (s≤s (s≤s z≤n)) = triv⌊2/2⌋
+
+triv⌊n/2⌋ : ∀ n → Acc ⌊ n /2⌋
+triv⌊n/2⌋ zero = triv0
+triv⌊n/2⌋ (suc zero) = triv⌊1/2⌋
+triv⌊n/2⌋ (suc (suc n)) = acc (help n)
+  where
+    help : ∀ n m → suc m ≤ suc ⌊ n /2⌋ → Acc m
+    help n m prf = {!!}
     
 WF : Set
 WF = (n : ℕ) → Acc n
