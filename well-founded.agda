@@ -85,22 +85,22 @@ open import Relation.Binary.PropositionalEquality hiding (trans)
 ⌊k*2+1/2⌋≡k zero = refl
 ⌊k*2+1/2⌋≡k (suc k) = cong suc (⌊k*2+1/2⌋≡k k)
 
+-- NOTICE! : go is nicely structurally recursive.
+go : ∀ k m → suc m ≤ k → Acc m
+go zero m ()
+go (suc k) zero p = acc λ _ ()
+go (suc k) (suc m) (s≤s m<k) = acc λ m₁ m₁<sm → go k m₁ (trans m₁<sm m<k)
+
 triv⌊n/2⌋ : ∀ n → Acc ⌊ n /2⌋
 triv⌊n/2⌋ n with parity n
-triv⌊n/2⌋ .(k * 2) | even k rewrite ⌊k*2/2⌋≡k k = acc {!!}
-triv⌊n/2⌋ .(k * 2 + 1) | odd k = {!!}
+triv⌊n/2⌋ .(k * 2) | even k rewrite ⌊k*2/2⌋≡k k = acc (go k)
+triv⌊n/2⌋ .(k * 2 + 1) | odd k rewrite ⌊k*2+1/2⌋≡k k = acc (go k)
     
 WF : Set
 WF = (n : ℕ) → Acc n
 
 <-wf : WF
 <-wf n = acc (go n)
-  where
-    -- NOTICE! : go is nicely structurally recursive.
-    go : ∀ n m → m < n → Acc m
-    go zero m ()
-    go (suc n) zero _ = acc (λ _ ())
-    go (suc n) (suc m) (s≤s m<n) = acc (λ m₁ m₁<sm → go n m₁ (trans m₁<sm m<n))
     
 -- prove
 /2-less : ∀ n → ⌊ n /2⌋ ≤ n
@@ -117,10 +117,10 @@ WF = (n : ℕ) → Acc n
         n≤sn (suc n) = s≤s (n≤sn n)
     
 f : ℕ → ℕ
-f n = go n (<-wf n)
+f n = go' n (<-wf n)
   where
-    go : ∀ n → Acc n → ℕ
-    go zero _ = 0
+    go' : ∀ n → Acc n → ℕ
+    go' zero _ = 0
     -- NOTICE! structurally recursive thanks to Acc :
     --   the recursive calls happen on arguments with one acc constructor peeled off.
-    go (suc n) (acc a) = go ⌊ n /2⌋ (a ⌊ n /2⌋ (s≤s (/2-less n)))
+    go' (suc n) (acc a) = go' ⌊ n /2⌋ (a ⌊ n /2⌋ (s≤s (/2-less n)))
