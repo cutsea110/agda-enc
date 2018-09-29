@@ -34,7 +34,7 @@ triv3 = acc help
     help .2 (s≤s (s≤s (s≤s z≤n))) = triv2
 
 WF : Set
-WF = ∀ n → Acc n
+WF = (n : ℕ) → Acc n
 
 <-wf : WF
 <-wf n = acc (go n)
