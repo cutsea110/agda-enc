@@ -1,13 +1,14 @@
 open import Data.Fin hiding (_+_; _<_) renaming (zero to fzero; suc to fsuc; pred to fpred)
 open import Data.Nat
-open import Data.Nat.Properties.Simple
+open import Data.Nat.Properties
 open import Data.Nat.DivMod
 open import Relation.Binary.PropositionalEquality as PropEq hiding (trans)
 open import Relation.Nullary
-open import Relation.Nullary.Decidable
+-- open import Relation.Nullary.Decidable
 open import Relation.Binary
-open import Induction.WellFounded
-open import Induction.Nat
+open DecTotalOrder ≤-decTotalOrder using (trans)
+-- open import Induction.WellFounded
+-- open import Induction.Nat
 
 open import Agda.Builtin.Nat hiding (_<_)
 
@@ -15,10 +16,26 @@ data List (`M : ℕ) (A : Fin (suc `M)) : Set where
   ⟨⟩ : List `M A
   ⟨_⟩⌢_ : Fin (suc `M) → List `M A → List `M A
 
-
+{--
 data Enc (`M : ℕ){A : Fin (suc `M)} : List `M A → Set where
   nil  : Enc `M ⟨⟩
   cons : (x : Fin (suc `M)) → (s : List `M A) → Enc `M (⟨ x ⟩⌢ s)
+--}
+
+data Acc (n : ℕ) : Set where
+  acc : (∀ m → m < n → Acc m) → Acc n
+
+WF : Set
+WF = ∀ n → Acc n
+
+≤′-wf : WF
+≤′-wf zero = acc λ _ ()
+≤′-wf (suc n) = acc (go n)
+  where
+    go : ∀ k m → m < suc k → Acc m
+    go k zero (s≤s z≤n) = acc λ _ ()
+    go k (suc m) (s≤s m<k) = acc λ m₁ m₁<sm → go k m₁ {!!}
+
 
 -- | {M=n} [a_0,a_1,a_2,...] ==> (1+a_0) + n(1+a_1) + n^2(1+a_2) + .. + n^i(1+a_i) + ...
 enc : (`M : ℕ) {A : Fin (suc `M)} → List `M A → ℕ
@@ -34,8 +51,8 @@ div-helper-lemma `M zero = ≤′-refl
 div-helper-lemma zero (suc n) rewrite div-helper-m0n0≡m+n 1 n = ≤′-refl
 div-helper-lemma (suc `M) (suc n) = {!!}
 
-quot<dividend : ∀ `M → ∀ n → n div (suc `M) ≤′ n
-quot<dividend `M n = div-helper-lemma `M n
+quot≤dividend : ∀ `M → ∀ n → n div (suc `M) ≤′ n
+quot≤dividend `M n = div-helper-lemma `M n
 
 dec : (`M : ℕ) {A : Fin (suc `M)} → ℕ → List `M A
 dec `M zero = ⟨⟩
