@@ -1,7 +1,7 @@
 open import Data.Fin hiding (_+_; _<_; _≤_) renaming (zero to fzero; suc to fsuc; pred to fpred)
 open import Data.Nat
 open import Relation.Binary
-open DecTotalOrder decTotalOrder
+open DecTotalOrder decTotalOrder using (trans)
 open import Data.Nat.DivMod
 
 data List (`M : ℕ) (A : Fin (suc `M)) : Set where
@@ -40,19 +40,21 @@ dec `M (suc n) with n div (suc `M) | n mod (suc `M)
 ... | q | r = ⟨ r ⟩⌢ dec `M q
 
 open import Agda.Builtin.Nat using (div-helper)
+open import Relation.Binary.PropositionalEquality
 
-lemma : ∀ `M n → (div-helper 0 `M n `M) < suc n
-lemma `M n = {!!}
+lemma : ∀ `M n → div-helper 0 `M n `M ≤ n
+lemma `M zero = z≤n
+lemma zero (suc n) = {!!}
+lemma (suc `M) (suc n) = {!!}
+
 
 dec' : (`M : ℕ) {A : Fin (suc `M)} → ℕ → List `M A
 dec' `M n = go `M n (<-wf n)
   where
     go : ∀ `M n → Acc n → {A : Fin (suc `M)} → List `M A
     go `M zero a = ⟨⟩
-    go `M (suc n) (acc a) = ⟨ n mod (suc `M) ⟩⌢ go `M (n div (suc `M)) (a (div-helper zero `M n `M) (lemma `M n))
+    go `M (suc n) (acc a) = ⟨ n mod (suc `M) ⟩⌢ go `M (n div (suc `M)) (a (div-helper zero `M n `M) (s≤s ( lemma `M n)))
     
-open import Relation.Binary.PropositionalEquality
-
 law1 : {`M : ℕ}{A : Fin (suc `M)}{s : List `M A} → dec `M (enc `M s) ≡ s
 law1 = {!!}
 
