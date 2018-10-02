@@ -61,3 +61,6 @@ div-wf (suc n) (suc d) {≢0} (acc a) = suc (div-wf (suc n ∸ suc d) (suc d) {�
         n∸d≤′n n zero ≢0 = ≤′-refl
         n∸d≤′n zero (suc d) ≢0 = ≤′-refl
         n∸d≤′n (suc n) (suc d) ≢0 = ≤′-step (n∸d≤′n n d (λ ()))
+
+div-wf' : (n : ℕ) → (d : ℕ) → {≢0 : d ≢ 0}  → ℕ
+div-wf' n d {≢0} = div-wf n d {≢0} (<-wf n)
