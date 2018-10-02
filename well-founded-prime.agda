@@ -32,3 +32,7 @@ open DecTotalOrder ≤-decTotalOrder using (trans)
 --                         φ
 fold-acc : ∀ {A} (_<_ : Rel A) {P : A → Set} → (∀ x → (∀ y → y < x → P y) → P x) → ∀ z → Acc _<_ z → P z
 fold-acc _<_ φ z (acc rec) = φ z (λ y y<z → fold-acc _<_ φ y (rec y y<z))
+
+-- | hide Acc
+rec : ∀ {A}{P : A → Set}{_<_ : Rel A} → WellFound _<_ → (∀ x → (∀ y → y < x → P y) → P x) → ∀ z → P z
+rec {_<_ = _<_} wf φ z = fold-acc _<_ φ z (wf z)
