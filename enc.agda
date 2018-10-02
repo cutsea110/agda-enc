@@ -1,16 +1,8 @@
-open import Data.Fin hiding (_+_; _<_) renaming (zero to fzero; suc to fsuc; pred to fpred)
+open import Data.Fin hiding (_+_; _<_; _≤_) renaming (zero to fzero; suc to fsuc; pred to fpred)
 open import Data.Nat
-open import Data.Nat.Properties
-open import Data.Nat.DivMod
-open import Relation.Binary.PropositionalEquality as PropEq hiding (trans)
-open import Relation.Nullary
--- open import Relation.Nullary.Decidable
 open import Relation.Binary
-open DecTotalOrder ≤-decTotalOrder using (trans)
--- open import Induction.WellFounded
--- open import Induction.Nat
-
-open import Agda.Builtin.Nat hiding (_<_)
+open DecTotalOrder decTotalOrder
+open import Data.Nat.DivMod
 
 data List (`M : ℕ) (A : Fin (suc `M)) : Set where
   ⟨⟩ : List `M A
@@ -28,36 +20,30 @@ data Acc (n : ℕ) : Set where
 WF : Set
 WF = ∀ n → Acc n
 
-≤′-wf : WF
-≤′-wf zero = acc λ _ ()
-≤′-wf (suc n) = acc (go n)
+<-wf : ∀ n → Acc n
+<-wf n = acc (go n)
   where
-    go : ∀ k m → m < suc k → Acc m
-    go k zero (s≤s z≤n) = acc λ _ ()
-    go k (suc m) (s≤s m<k) = acc λ m₁ m₁<sm → go k m₁ {!!}
-
+    go : ∀ n m → m < n → Acc m
+    go zero m ()
+    go (suc n) zero p = acc (λ _ ())
+    go (suc n) (suc m) (s≤s m<n) = acc (λ k k<sm → go n k (trans k<sm m<n))
 
 -- | {M=n} [a_0,a_1,a_2,...] ==> (1+a_0) + n(1+a_1) + n^2(1+a_2) + .. + n^i(1+a_i) + ...
 enc : (`M : ℕ) {A : Fin (suc `M)} → List `M A → ℕ
 enc `M ⟨⟩ = 0
 enc `M (⟨ x ⟩⌢ s) = 1 + toℕ x + suc `M * enc `M s
 
-div-helper-m0n0≡m+n : ∀ m n → div-helper m 0 n 0 ≡ m + n
-div-helper-m0n0≡m+n m zero rewrite +-comm m 0 = refl
-div-helper-m0n0≡m+n m (suc n) rewrite div-helper-m0n0≡m+n (suc m) n = sym (+-suc m n)
-
-div-helper-lemma : ∀ `M n → div-helper 0 `M n `M ≤′ n
-div-helper-lemma `M zero = ≤′-refl
-div-helper-lemma zero (suc n) rewrite div-helper-m0n0≡m+n 1 n = ≤′-refl
-div-helper-lemma (suc `M) (suc n) = {!!}
-
-quot≤dividend : ∀ `M → ∀ n → n div (suc `M) ≤′ n
-quot≤dividend `M n = div-helper-lemma `M n
-
+{-# TERMINATING #-}
 dec : (`M : ℕ) {A : Fin (suc `M)} → ℕ → List `M A
 dec `M zero = ⟨⟩
 dec `M (suc n) with n div (suc `M) | n mod (suc `M)
 ... | q | r = ⟨ r ⟩⌢ dec `M q
+
+dec' : (`M : ℕ) {A : Fin (suc `M)} → ℕ → List `M A
+dec' `M zero = ⟨⟩
+dec' `M (suc n) = {!!}
+
+open import Relation.Binary.PropositionalEquality
 
 law1 : {`M : ℕ}{A : Fin (suc `M)}{s : List `M A} → dec `M (enc `M s) ≡ s
 law1 = {!!}
