@@ -39,10 +39,18 @@ dec `M zero = ⟨⟩
 dec `M (suc n) with n div (suc `M) | n mod (suc `M)
 ... | q | r = ⟨ r ⟩⌢ dec `M q
 
-dec' : (`M : ℕ) {A : Fin (suc `M)} → ℕ → List `M A
-dec' `M zero = ⟨⟩
-dec' `M (suc n) = {!!}
+open import Agda.Builtin.Nat using (div-helper)
 
+lemma : ∀ `M n → (div-helper 0 `M n `M) < suc n
+lemma `M n = {!!}
+
+dec' : (`M : ℕ) {A : Fin (suc `M)} → ℕ → List `M A
+dec' `M n = go `M n (<-wf n)
+  where
+    go : ∀ `M n → Acc n → {A : Fin (suc `M)} → List `M A
+    go `M zero a = ⟨⟩
+    go `M (suc n) (acc a) = ⟨ n mod (suc `M) ⟩⌢ go `M (n div (suc `M)) (a (div-helper zero `M n `M) (lemma `M n))
+    
 open import Relation.Binary.PropositionalEquality
 
 law1 : {`M : ℕ}{A : Fin (suc `M)}{s : List `M A} → dec `M (enc `M s) ≡ s
