@@ -8,8 +8,8 @@ data Acc (x : ℕ) : Set where
   acc : (∀ y → y < x → Acc y) → Acc x
 
 -- well-fouded over _<_
--- WF : Set
--- WF = ∀ n → Acc n
+WF : Set
+WF = ∀ n → Acc n
 
 -- | View function
 -- _<_ is well-founded relation
@@ -57,3 +57,12 @@ div n d {≢0} = div' n d {≢0} (<-wf n)
             n∸d≤′n n zero = ≤′-refl
             n∸d≤′n zero (suc d) = ≤′-refl
             n∸d≤′n (suc n₂) (suc d₂) = ≤′-step (n∸d≤′n n₂ d₂)
+
+
+-- | fold over Acc
+fold-acc : {P : ℕ → Set} → (∀ x → (∀ y → y < x → P y) → P x ) → ∀ z → Acc z → P z
+fold-acc φ z (acc a) = φ z (λ y y<z → fold-acc φ y (a y y<z))
+
+-- | recursor
+rec-wf : {P : ℕ → Set} → WF → (∀ x → (∀ y → y < x → P y) → P x) → ∀ z → P z
+rec-wf wf φ z = fold-acc φ z (wf z)
