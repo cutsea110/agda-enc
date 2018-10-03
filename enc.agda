@@ -1,7 +1,8 @@
 open import Data.Fin hiding (_+_; _<_; _≤_) renaming (zero to fzero; suc to fsuc; pred to fpred)
 open import Data.Nat
+open import Data.Nat.Properties
 open import Relation.Binary
-open DecTotalOrder decTotalOrder using (trans)
+open DecTotalOrder ≤-decTotalOrder using (trans)
 open import Data.Nat.DivMod
 
 data List (`M : ℕ) (A : Fin (suc `M)) : Set where
