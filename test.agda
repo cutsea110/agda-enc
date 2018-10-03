@@ -1,67 +1,80 @@
---  Well-founded
 open import Data.Nat
 open import Data.Nat.Properties
 open import Relation.Binary
 open DecTotalOrder decTotalOrder using (trans)
 
--- | view type
+-- | View Type
 data Acc (n : ℕ) : Set where
   acc : (∀ m → m < n → Acc m) → Acc n
 
--- view function
+WF : Set
+WF = ∀ n → Acc n
+
+-- | View Function
 <-wf : ∀ n → Acc n
 <-wf n = acc (go n)
   where
     go : ∀ n m → m < n → Acc m
     go zero m ()
-    go (suc n) zero p = acc (λ _ ())
+    go (suc n) zero (s≤s p) = acc (λ _ ())
     go (suc n) (suc m) (s≤s m<n) = acc (λ k k<sm → go n k (trans k<sm m<n))
 
-{-# TERMINATING #-}
-f : ℕ → ℕ
-f zero = 0
-f (suc n) = f ⌊ n /2⌋
-
-g : ℕ → ℕ
-g n =  go n (<-wf n) 
-  where
-    go : ∀ n → Acc n → ℕ
-    go zero a = 0
-    go (suc n) (acc a) = go ⌊ n /2⌋ (a ⌊ n /2⌋ (s≤s (/2-less n)))
-      where
-        /2-less : ∀ n → ⌊ n /2⌋ ≤ n
-        /2-less zero = z≤n
-        /2-less (suc zero) = z≤n
-        /2-less (suc (suc n)) = s≤s (trans (/2-less n) (n≤sn n))
-          where
-            n≤sn : ∀ n → n ≤ suc n
-            n≤sn zero = z≤n
-            n≤sn (suc n) = s≤s (n≤sn n)
-
-open import Relation.Binary.PropositionalEquality
+open import Relation.Binary.PropositionalEquality hiding (trans)
 open import Relation.Nullary
 open import Data.Empty
 
-{-# TERMINATING #-}
-div : ℕ → (d : ℕ) → {≢0 : d ≢ 0} → ℕ
-div zero d {≢0} = 0
-div (suc n) zero {≢0} = ⊥-elim (≢0 refl)
-div (suc n) (suc d) {≢0} = suc (div (suc n ∸ suc d) (suc d) {≢0})
-
-open import Data.Nat.Properties
-
-div-wf : (n : ℕ) → (d : ℕ) → {≢0 : d ≢ 0} → Acc n → ℕ
-div-wf n zero {≢0} a = ⊥-elim (≢0 refl)
-div-wf zero (suc d) {≢0} a = 0
-div-wf (suc n) (suc d) {≢0} (acc a) = suc (div-wf (suc n ∸ suc d) (suc d) {≢0} (a (n ∸ d) (s≤s ( n∸d≤n n d ≢0 ))))
+⌊n/2⌋≤n : ∀ n → ⌊ n /2⌋ ≤ n
+⌊n/2⌋≤n zero = z≤n
+⌊n/2⌋≤n (suc zero) = z≤n
+⌊n/2⌋≤n (suc (suc n)) = s≤s (trans (⌊n/2⌋≤n n) (n≤sn n))
   where
-    n∸d≤n : ∀ n d → (≢0 : suc d ≢ 0) → n ∸ d ≤ n
-    n∸d≤n n d ≢0 = ≤′⇒≤ (n∸d≤′n n d ≢0)
-      where
-        n∸d≤′n : ∀ n d → (≢0 : suc d ≢ 0) → n ∸ d ≤′ n
-        n∸d≤′n n zero ≢0 = ≤′-refl
-        n∸d≤′n zero (suc d) ≢0 = ≤′-refl
-        n∸d≤′n (suc n) (suc d) ≢0 = ≤′-step (n∸d≤′n n d (λ ()))
+    n≤sn : ∀ n → n ≤ suc n
+    n≤sn zero = z≤n
+    n≤sn (suc n) = s≤s (n≤sn n)
 
-div-wf' : (n : ℕ) → (d : ℕ) → {≢0 : d ≢ 0}  → ℕ
-div-wf' n d {≢0} = div-wf n d {≢0} (<-wf n)
+test0 : ℕ → ℕ
+test0 n = test1 n (<-wf n)
+  where
+    test1 : (n : ℕ) → Acc n → ℕ
+    test1 zero a = 0
+    test1 (suc n) (acc a) = test1 ⌊ n /2⌋ (a ⌊ n /2⌋ (s≤s (⌊n/2⌋≤n n)))
+
+
+div : (n : ℕ) → (d : ℕ) → {≢0 : d ≢ 0} → ℕ
+div n d {≢0} = div' n d {≢0} (<-wf n)
+  where
+    div' : (n : ℕ) → (d : ℕ) → {≢0 : d ≢ 0} → Acc n → ℕ
+    div' n zero {≢0} a = ⊥-elim (≢0 refl)
+    div' zero (suc d) {≢0} a = 0
+    div' (suc n) (suc d) {≢0} (acc r) = div' (suc n ∸ suc d) (suc d) {≢0} (r (n ∸ d) (s≤s (≤′⇒≤ (n∸d<sn n d))))
+      where
+        n∸d<sn : ∀ n d → n ∸ d ≤′ n
+        n∸d<sn n zero = ≤′-refl
+        n∸d<sn zero (suc d) = ≤′-refl
+        n∸d<sn (suc n) (suc d) = ≤′-step (n∸d<sn n d)
+
+fold-acc : {P : ℕ → Set} → (∀ n → (∀ m → m < n → P m) → P n) → ∀ x → Acc x → P x
+fold-acc {P} φ x (acc r) = φ x (λ y y<x → fold-acc {P} φ y (r y y<x))
+
+rec-wf : {P : ℕ → Set} → WF → (∀ n → (∀ m → m < n → P m) → P n) → ∀ x → P x
+rec-wf {P} wf φ x = fold-acc {P} φ x (wf x)
+
+test0' : ℕ → ℕ
+test0' n = rec-wf <-wf body n
+  where
+    body : ∀ n → (∀ m → suc m ≤ n → ℕ) → ℕ
+    body zero r = 0
+    body (suc n) r = r n (s≤s (≤′⇒≤ ≤′-refl))
+
+div' : (n : ℕ) → (d : ℕ) → {≢0 : d ≢ 0} → ℕ
+div' n d {≢0} = rec-wf <-wf ( body d ≢0 ) n
+  where
+    body : ∀ d → (≢0 :  d ≢ 0) → ∀ n → (∀ m → m < n → ℕ) → ℕ
+    body zero ≢0 n r = ⊥-elim (≢0 refl)
+    body (suc d) ≢1 zero r = 0
+    body (suc d) ≢1 (suc n) r = suc (r (suc n ∸ suc d) (s≤s (≤′⇒≤ (n∸d≤′n n d))))
+      where
+        n∸d≤′n : ∀ n d → n ∸ d ≤′ n
+        n∸d≤′n n zero = ≤′-refl
+        n∸d≤′n zero (suc d) = ≤′-refl
+        n∸d≤′n (suc n) (suc d) = ≤′-step (n∸d≤′n n d)
