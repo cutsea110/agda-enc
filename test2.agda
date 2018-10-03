@@ -73,3 +73,16 @@ test1 n = rec-wf <-wf body n
     body : ∀ x → (∀ y → y < x → ℕ) → ℕ
     body zero _ = 0
     body (suc x) r = r ⌊ x /2⌋ (s≤s (/2-less x))
+
+div' : (n : ℕ) → (d : ℕ) → {≢0 : d ≢ 0} → ℕ
+div' n d {≢0} = rec-wf <-wf ( body ≢0) d
+  where
+    body : ∀ {d} → (d ≢ 0) → ∀ n → (∀ y → suc y ≤ n → ℕ) → ℕ
+    body ≢0 zero _ = 0
+    body {zero} ≢0 (suc n) f = ⊥-elim (≢0 refl)
+    body {suc d} ≢0 (suc n) f = suc (f (suc n ∸ suc d) (s≤s (≤′⇒≤ (n∸d≤′n n d))))
+      where
+          n∸d≤′n : ∀ n d → n ∸ d ≤′ n
+          n∸d≤′n n zero = ≤′-refl
+          n∸d≤′n zero (suc d₂) = ≤′-refl
+          n∸d≤′n (suc n) (suc d) = ≤′-step (n∸d≤′n n d )
