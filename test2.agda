@@ -66,3 +66,10 @@ fold-acc φ z (acc a) = φ z (λ y y<z → fold-acc φ y (a y y<z))
 -- | recursor
 rec-wf : {P : ℕ → Set} → WF → (∀ x → (∀ y → y < x → P y) → P x) → ∀ z → P z
 rec-wf wf φ z = fold-acc φ z (wf z)
+
+test1 : ℕ → ℕ
+test1 n = rec-wf <-wf body n
+  where
+    body : ∀ x → (∀ y → y < x → ℕ) → ℕ
+    body zero _ = 0
+    body (suc x) r = r ⌊ x /2⌋ (s≤s (/2-less x))

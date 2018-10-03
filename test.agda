@@ -2,7 +2,7 @@
 open import Data.Nat
 open import Data.Nat.Properties
 open import Relation.Binary
-open DecTotalOrder ≤-decTotalOrder using (trans)
+open DecTotalOrder decTotalOrder using (trans)
 
 -- | view type
 data Acc (n : ℕ) : Set where
