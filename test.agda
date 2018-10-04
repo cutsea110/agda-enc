@@ -78,3 +78,17 @@ div' n d {≢0} = rec-wf <-wf ( body d ≢0 ) n
         n∸d≤′n n zero = ≤′-refl
         n∸d≤′n zero (suc d) = ≤′-refl
         n∸d≤′n (suc n) (suc d) = ≤′-step (n∸d≤′n n d)
+
+open import Induction.WellFounded
+open import Induction.Nat
+
+
+open import Relation.Unary
+open import Level renaming (zero to lzero; suc to lsuc)
+  
+twice : ℕ → ℕ
+twice = rec _ (λ
+  { zero y → zero
+  ; (suc n) twice-n → suc (suc twice-n)
+  })
+
