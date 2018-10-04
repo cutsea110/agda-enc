@@ -85,6 +85,7 @@ open import Induction.Nat
 
 open import Relation.Unary
 open import Level renaming (zero to lzero; suc to lsuc)
+open import Data.Product
   
 twice : ℕ → ℕ
 twice = rec _ (λ
@@ -92,3 +93,12 @@ twice = rec _ (λ
   ; (suc n) twice-n → suc (suc twice-n)
   })
 
+half₁ : ℕ → ℕ
+half₁ = cRec _ half₁-step
+  where
+    half₁-step : ∀ x → CRec lzero (λ _ → ℕ) x → ℕ
+    half₁-step = λ
+      { zero x → 0
+      ; (suc zero) x → 0
+      ; (suc (suc n)) (pred₁n , half₁n , _) → suc half₁n
+      }
