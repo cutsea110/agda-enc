@@ -98,7 +98,17 @@ half₁ = cRec _ half₁-step
   where
     half₁-step : ∀ x → CRec lzero (λ _ → ℕ) x → ℕ
     half₁-step = λ
-      { zero x → 0
-      ; (suc zero) x → 0
-      ; (suc (suc n)) (pred₁n , half₁n , _) → suc half₁n
+      { zero rs → 0
+      ; (suc zero) rs → 0
+      ; (suc (suc n)) (pred₁n , half₁n , rs) → suc half₁n
+      }
+
+half₂ : ℕ → ℕ
+half₂ = <-rec (λ x → ℕ) half₂-step
+  where
+    half₂-step : ∀ x → (∀ y → suc y ≤′ x → ℕ) → ℕ
+    half₂-step = λ
+      { zero rs → 0
+      ; (suc zero) rs → 0
+      ; (suc (suc n)) rs → suc (rs n (≤′-step ≤′-refl))
       }
