@@ -93,29 +93,35 @@ twice = rec _ (λ
   ; (suc n) twice-n → suc (suc twice-n)
   })
 
-half₁ : ℕ → ℕ
-half₁ = cRec _ half₁-step
-  where
-    half₁-step : ∀ x → CRec lzero (λ _ → ℕ) x → ℕ
-    half₁-step = λ
-      { zero rs → 0
-      ; (suc zero) rs → 0
-      ; (suc (suc n)) (pred₁n , half₁n , rs) → suc half₁n
-      }
+mutual
 
-half₂ : ℕ → ℕ
-half₂ = <-rec (λ x → ℕ) half₂-step
-  where
-    half₂-step : ∀ x → (∀ y → suc y ≤′ x → ℕ) → ℕ
-    half₂-step = λ
-      { zero rs → 0
-      ; (suc zero) rs → 0
-      ; (suc (suc n)) rs → suc (rs n (≤′-step ≤′-refl))
-      }
+  half₁-step : ∀ x → CRec lzero (λ _ → ℕ) x → ℕ
+  half₁-step = λ
+    { zero rs → 0
+    ; (suc zero) rs → 0
+    ; (suc (suc n)) (pred₁n , half₁n , rs) → suc half₁n
+    }
 
-half₁-2+ : ∀ n → half₁ (2 + n) ≡ 1 + half₁ n
-half₁-2+ n = begin
-  half₁ (2 + n)  ≡⟨⟩
-  {!!}
-   1 + half₁ n  ∎
-  where open ≡-Reasoning
+  half₁ : ℕ → ℕ
+  half₁ = cRec _ half₁-step
+
+  half₂-step : ∀ x → (∀ y → suc y ≤′ x → ℕ) → ℕ
+  half₂-step = λ
+    { zero rs → 0
+    ; (suc zero) rs → 0
+    ; (suc (suc n)) rs → suc (rs n (≤′-step ≤′-refl))
+    }
+  half₂ : ℕ → ℕ
+  half₂ = <-rec (λ x → ℕ) half₂-step
+
+  half₁-2+ : ∀ n → half₁ (2 + n) ≡ 1 + half₁ n
+  half₁-2+ n = begin
+
+    half₁ (2 + n)  ≡⟨⟩
+  
+    cRec (λ x → ℕ) half₁-step (2 + n) ≡⟨⟩
+
+    half₁-step (2 + n) (cRec-builder (λ x → ℕ) half₁-step (2 + n)) ≡⟨⟩
+  
+    1 + half₁ n  ∎
+    where open ≡-Reasoning
