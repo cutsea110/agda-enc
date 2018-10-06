@@ -112,3 +112,10 @@ half₂ = <-rec (λ x → ℕ) half₂-step
       ; (suc zero) rs → 0
       ; (suc (suc n)) rs → suc (rs n (≤′-step ≤′-refl))
       }
+
+half₁-2+ : ∀ n → half₁ (2 + n) ≡ 1 + half₁ n
+half₁-2+ n = begin
+  half₁ (2 + n)  ≡⟨⟩
+  {!!}
+   1 + half₁ n  ∎
+  where open ≡-Reasoning
