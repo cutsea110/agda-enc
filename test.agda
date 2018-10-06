@@ -142,6 +142,33 @@ mutual
   half₂-2+ n = begin
   
     half₂ (2 + n) ≡⟨⟩
+
+    <-rec (λ x → ℕ) half₂-step (2 + n) ≡⟨⟩
+
+    half₂-step (2 + n) (<-rec-builder (λ x → ℕ) half₂-step (2 + n)) ≡⟨⟩
+
+    1 + <-rec-builder (λ x → ℕ) half₂-step (2 + n) n (≤′-step ≤′-refl) ≡⟨⟩
+
+    1 + Some.wfRec-builder (λ x → ℕ) half₂-step (2 + n)
+        (<-well-founded (2 + n)) n (≤′-step ≤′-refl) ≡⟨⟩
+
+    1 + Some.wfRec-builder (λ x → ℕ) half₂-step (2 + n)
+        (acc (<-well-founded′ (2 + n))) n (≤′-step ≤′-refl) ≡⟨⟩
+
+    1 + half₂-step n
+        (Some.wfRec-builder (λ x → ℕ) half₂-step n
+          (<-well-founded′ (2 + n) n (≤′-step ≤′-refl))) ≡⟨⟩
+
+    1 + half₂-step n
+        (Some.wfRec-builder (λ x → ℕ) half₂-step n
+          (<-well-founded′ (1 + n) n ≤′-refl)) ≡⟨⟩
+
+    1 + half₂-step n
+        (Some.wfRec-builder (λ x → ℕ) half₂-step n (<-well-founded n)) ≡⟨⟩
+
+    1 + half₂-step n (<-rec-builder (λ x → ℕ) half₂-step n) ≡⟨⟩
+
+    1 + <-rec (λ x → ℕ) half₂-step n ≡⟨⟩
     
     1 + half₂ n ∎
     
