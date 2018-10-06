@@ -122,6 +122,16 @@ mutual
     cRec (λ x → ℕ) half₁-step (2 + n) ≡⟨⟩
 
     half₁-step (2 + n) (cRec-builder (λ x → ℕ) half₁-step (2 + n)) ≡⟨⟩
-  
+
+    half₁-step (2 + n)
+      (let ih = cRec-builder (λ x → ℕ) half₁-step (1 + n)
+        in (half₁-step (1 + n) ih) , ih) ≡⟨⟩
+
+    half₁-step (2 + n)
+      (let ih = cRec-builder (λ x → ℕ) half₁-step n
+        in (half₁-step (1 + n) ((half₁-step n ih) , ih)) , ((half₁-step n ih) , ih)) ≡⟨⟩
+
+    ? ≡⟨⟩
+
     1 + half₁ n  ∎
     where open ≡-Reasoning
