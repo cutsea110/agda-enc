@@ -137,3 +137,12 @@ mutual
 
     1 + half₁ n  ∎
     where open ≡-Reasoning
+    
+  half₂-2+ : ∀ n → half₂ (2 + n) ≡ 1 + half₂ n
+  half₂-2+ n = begin
+  
+    half₂ (2 + n) ≡⟨⟩
+    
+    1 + half₂ n ∎
+    
+    where open ≡-Reasoning
