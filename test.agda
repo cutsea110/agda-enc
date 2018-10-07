@@ -181,3 +181,10 @@ mutual
     ; (suc zero) x → refl
     ; (suc (suc n)) (_ , half₁twice-n≡n , _) → cong (suc ∘ suc) half₁twice-n≡n
     }
+
+  half₂-+₁ : ∀ n → half₂ (twice n) ≡ n
+  half₂-+₁ = cRec _ λ
+    { zero x → refl
+    ; (suc zero) x → refl
+    ; (suc (suc n)) (_ , half₁twice-n≡n , _) → cong (suc ∘ suc) half₁twice-n≡n
+    }
