@@ -188,3 +188,10 @@ mutual
     ; (suc zero) x → refl
     ; (suc (suc n)) (_ , half₁twice-n≡n , _) → cong (suc ∘ suc) half₁twice-n≡n
     }
+
+  half₁-+₂ : ∀ n → half₁ (twice n) ≡ n
+  half₁-+₂ = <-rec _ λ
+    { zero x → refl
+    ; (suc zero) x → refl
+    ; (suc (suc n)) rec → cong (suc ∘ suc) (rec n (≤′-step ≤′-refl))
+    }
