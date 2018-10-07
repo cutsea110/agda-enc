@@ -191,7 +191,14 @@ mutual
 
   half₁-+₂ : ∀ n → half₁ (twice n) ≡ n
   half₁-+₂ = <-rec _ λ
-    { zero x → refl
-    ; (suc zero) x → refl
+    { zero rec → refl
+    ; (suc zero) rec → refl
+    ; (suc (suc n)) rec → cong (suc ∘ suc) (rec n (≤′-step ≤′-refl))
+    }
+
+  half₂-+₂ : ∀ n → half₂ (twice n) ≡ n
+  half₂-+₂ = <-rec _ λ
+    { zero rec → refl
+    ; (suc zero) rec → refl
     ; (suc (suc n)) rec → cong (suc ∘ suc) (rec n (≤′-step ≤′-refl))
     }
