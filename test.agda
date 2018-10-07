@@ -1,3 +1,4 @@
+open import Function
 open import Data.Nat
 open import Data.Nat.Properties
 open import Relation.Binary
@@ -173,3 +174,10 @@ mutual
     1 + half₂ n ∎
     
     where open ≡-Reasoning
+
+  half₁-+₁ : ∀ n → half₁ (twice n) ≡ n
+  half₁-+₁ = cRec _ λ
+    { zero x → refl
+    ; (suc zero) x → refl
+    ; (suc (suc n)) (_ , half₁twice-n≡n , _) → cong (suc ∘ suc) half₁twice-n≡n
+    }
