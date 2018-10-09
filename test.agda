@@ -65,7 +65,7 @@ test0' n = rec-wf <-wf body n
   where
     body : ∀ n → (∀ m → m < n → ℕ) → ℕ
     body zero r = 0
-    body (suc n) r = r n (s≤s (≤′⇒≤ ≤′-refl))
+    body (suc n) r = r ⌊ n /2⌋ (s≤s (⌊n/2⌋≤n n))
 
 div' : (n : ℕ) → (d : ℕ) → {≢0 : d ≢ 0} → ℕ
 div' n d {≢0} = rec-wf <-wf ( body d ≢0 ) n
