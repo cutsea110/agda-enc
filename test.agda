@@ -63,7 +63,7 @@ rec-wf {P} wf φ x = fold-acc {P} φ x (wf x)
 test0' : ℕ → ℕ
 test0' n = rec-wf <-wf body n
   where
-    body : ∀ n → (∀ m → suc m ≤ n → ℕ) → ℕ
+    body : ∀ n → (∀ m → m < n → ℕ) → ℕ
     body zero r = 0
     body (suc n) r = r n (s≤s (≤′⇒≤ ≤′-refl))
 
@@ -72,8 +72,8 @@ div' n d {≢0} = rec-wf <-wf ( body d ≢0 ) n
   where
     body : ∀ d → (≢0 :  d ≢ 0) → ∀ n → (∀ m → m < n → ℕ) → ℕ
     body zero ≢0 n r = ⊥-elim (≢0 refl)
-    body (suc d) ≢1 zero r = 0
-    body (suc d) ≢1 (suc n) r = suc (r (suc n ∸ suc d) (s≤s (≤′⇒≤ (n∸d≤′n n d))))
+    body (suc d) ≢0 zero r = 0
+    body (suc d) ≢0 (suc n) r = suc (r (suc n ∸ suc d) (s≤s (≤′⇒≤ (n∸d≤′n n d))))
       where
         n∸d≤′n : ∀ n d → n ∸ d ≤′ n
         n∸d≤′n n zero = ≤′-refl
