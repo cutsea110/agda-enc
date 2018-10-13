@@ -100,11 +100,18 @@ open All <-well-founded lzero renaming (wfRec to <-rec)
 open import Data.Nat
 
 const0 : ℕ → ℕ
+const0 = <-rec _ λ
+  { zero p → 0
+  ; (suc n) p → p ⌊ n /2⌋ (≤⇒≤′ (s≤s (≤′⇒≤ (⌊n/2⌋≤′n n))))
+  }
+{--
+const0 : ℕ → ℕ
 const0 n = <-rec _ body n
   where
     body : ∀ n → (∀ m → m <′ n → ℕ) → ℕ
     body zero p = 0
     body (suc n) p = p ⌊ n /2⌋ (≤⇒≤′ (s≤s (≤′⇒≤ (⌊n/2⌋≤′n n))))
+--}
 
 open import Relation.Binary.PropositionalEquality
 open import Data.Empty
