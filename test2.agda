@@ -120,7 +120,17 @@ open import Relation.Nullary
 div : (n d : ℕ) → {≢0 : d ≢ 0} → ℕ
 div n d {≢0} = <-rec _ (body d ≢0) n
   where
+    body : ∀ d → (d ≡ 0 → ⊥) → ∀ x → (∀ y → suc y ≤′ x → ℕ) → ℕ
+    body zero ≢0 x p = ⊥-elim (≢0 refl)
+    body (suc d) ≢0 zero p = 0
+    body (suc d) ≢0 (suc n) p = suc (p (suc n ∸ suc d) (≤⇒≤′ (s≤s (n∸m≤n d n))))
+
+{--
+div : (n d : ℕ) → {≢0 : d ≢ 0} → ℕ
+div n d {≢0} = <-rec _ (body d ≢0) n
+  where
     body : ∀ d → (d ≢ 0) → ∀ n → (∀ m →  m <′ n → ℕ) → ℕ
     body zero ≢0 n rec = ⊥-elim (≢0 refl)
     body (suc d) ≢0 zero rec = 0
     body (suc d) ≢0 (suc n) rec = suc (rec (suc n ∸ suc d) (≤⇒≤′ (s≤s (n∸m≤n d n))))
+--}
