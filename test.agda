@@ -97,6 +97,6 @@ div : (n d : ℕ) → {≢0 : d ≢ 0} → ℕ
 div n d {≢0} = <-rec _ (body d ≢0) n
   where
     body : ∀ d → (d ≢ 0) → ∀ n → (∀ m → m <′ n → ℕ) → ℕ
-    body zero ≢0 n₁ rs = ⊥-elim (≢0 refl)
+    body zero ≢0 n rs = ⊥-elim (≢0 refl)
     body (suc d) ≢0 zero rs = 0
-    body (suc d) ≢1 (suc n) rs = suc (rs (suc n ∸ suc d) (s≤′s (≤⇒≤′ (n∸m≤n d n))))
+    body (suc d) ≢0 (suc n) rs = suc (rs (suc n ∸ suc d) (s≤′s (≤⇒≤′ (n∸m≤n d n))))
